@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  rails_app:
+    build:
+      context: ./src
+      dockerfile: ../Dockerfile
+    container_name: thanx-rails-app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src:/src
+      - ./entrypoint.sh:/src/entrypoint.sh
+    environment:
+      RAILS_ENV: development
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: rails_db
+      DB_USERNAME: root
+      DB_PASSWORD: secret
+    working_dir: /src
+    command: sh /src/entrypoint.sh
+    depends_on:
+      - mysql
+      - mysql_test
+
+  mysql:
+    image: mysql:8.0
+    container_name: rails-mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: rails_db
+      MYSQL_USER: rails
+      MYSQL_PASSWORD: secret
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  mysql_test:
+    image: mysql:8.0
+    container_name: rails-mysql-test-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: rails_test_db
+      MYSQL_USER: rails
+      MYSQL_PASSWORD: secret
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_test_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
+  mysql_test_data:
