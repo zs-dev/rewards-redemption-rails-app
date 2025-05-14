@@ -17,7 +17,7 @@ class RedemptionService
       user = User.find_by(id: user_id)
 
       if user.points < reward.points
-        raise InsufficientPointsError, "Not enough points"
+        raise InsufficientPointsError, "Not enough points."
       end
 
       user.decrement!(:points, reward.points)
