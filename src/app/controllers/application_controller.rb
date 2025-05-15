@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  # Browser restrictions
+  # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
 
   rescue_from StandardError, with: :handle_api_error
@@ -100,7 +100,6 @@ class ApplicationController < ActionController::Base
   # @return [void]
   def render_error(status:, message:, details: nil)
     response = { error: message }
-    response[:details] = details if details && (Rails.env.development? || Rails.env.test?)
     render json: response, status: status
   end
 end
