@@ -29,7 +29,7 @@ class RedemptionService
   #
   # @param user_id [Integer]
   #
-  # @return [ActiveRecord::Relation]
+  # @return [Array<Hash>]
   #
   # @raise [ActiveRecord::RecordNotFound]
   # @raise [ArgumentError]
@@ -45,7 +45,21 @@ class RedemptionService
       end
     end
 
-    Redemption.includes(:reward).where(user_id: user_id)
+    Redemption.includes(:reward)
+              .where(user_id: user_id)
+              .map do |redemption|
+      {
+        id: redemption.id,
+        user_id: redemption.user_id,
+        created_at: redemption.created_at,
+        updated_at: redemption.updated_at,
+        reward: {
+          id: redemption.reward_id,  # Moved here
+          name: redemption.reward&.name,
+          points: redemption.reward&.points
+        }
+      }
+    end
   end
 
   private

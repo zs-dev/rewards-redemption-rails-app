@@ -13,7 +13,13 @@ RSpec.describe RedemptionsController, type: :controller do
         expect(response).to have_http_status(:ok)
         json_response = JSON.parse(response.body)
         expect(json_response.size).to eq(1)
-        expect(json_response[0]).to eq(JSON.parse(redemption.to_json))
+        expect(json_response[0]['id']).to eq(1)
+        expect(json_response[0]['user_id']).to eq(1)
+
+        expect(json_response[0]['reward']['id']).to eq(1)
+        expect(json_response[0]['reward']['name']).to eq('Happy meal')
+        expect(json_response[0]['reward']['points']).to eq(500)
+
       end
     end
 

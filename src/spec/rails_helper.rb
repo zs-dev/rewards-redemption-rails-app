@@ -15,7 +15,9 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
 
   config.include FactoryBot::Syntax::Methods
-
+  config.before(:suite) do
+    DatabaseCleaner.clean_with(:truncation)
+  end
   config.before(:each) do
     DatabaseCleaner.strategy = :truncation
     DatabaseCleaner.start
@@ -23,6 +25,7 @@ RSpec.configure do |config|
 
   config.after(:each) do
     DatabaseCleaner.clean
+    $stdout = STDOUT  # Reset stdout after CLI tests
   end
 
   Shoulda::Matchers.configure do |shoulda_config|

@@ -74,8 +74,42 @@ RSpec.describe RedemptionService do
     context 'with valid user id' do
       it 'returns the user redemption history' do
         history = RedemptionService.get_redemption_history(user.id)
-        expect(history).to contain_exactly(redemption1, redemption2)
-        expect(history).not_to include(other_user_redemption)
+
+        history = history.as_json if history.respond_to?(:as_json)
+
+        transformed_history = history.map do |h|
+          {
+            'id' => h['id'] || h[:id],
+            'user_id' => h['user_id'] || h[:user_id],
+            'reward' => {
+              'id' => h.dig('reward', 'id') || h.dig(:reward, :id),
+              'name' => h.dig('reward', 'name') || h.dig(:reward, :name),
+              'points' => h.dig('reward', 'points') || h.dig(:reward, :points)
+            }
+          }
+        end
+
+        expected = [
+          {
+            'id' => redemption1.id,
+            'user_id' => redemption1.user_id,
+            'reward' => {
+              'id' => redemption1.reward.id,
+              'name' => redemption1.reward.name,
+              'points' => redemption1.reward.points
+            }
+          },
+          {
+            'id' => redemption2.id,
+            'user_id' => redemption2.user_id,
+            'reward' => {
+              'id' => redemption2.reward.id,
+              'name' => redemption2.reward.name,
+              'points' => redemption2.reward.points
+            }
+          }
+        ]
+        expect(transformed_history).to match_array(expected)
       end
     end
 
