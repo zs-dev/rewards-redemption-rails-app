@@ -23,3 +23,29 @@ From here it is straight forward to use it.
 
 6. To run tests:
    `docker-compose exec app bundle exec rspec --fail-fast`
+7. DB connections for a client:
+```
+//dev db
+
+Host: 127.0.0.1
+
+Port: 3306
+
+Username: root
+
+Password: secret
+
+Default Schema: rails_db
+
+//test db
+
+Host: 127.0.0.1
+
+Port: 3307
+
+Username: root
+
+Password: secret
+
+Default Schema: rails_test_db
+```
