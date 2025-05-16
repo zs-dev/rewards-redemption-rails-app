@@ -1,7 +1,5 @@
-version: '3.8'
-
 services:
-  rails_app:
+  app:
     build:
       context: ./src
       dockerfile: ../Dockerfile

@@ -1,0 +1,6 @@
+development:
+  default_user: 'test@example.com'
+  api_base_url: 'http://localhost:3000'
+test:
+  default_user: 'test@example.com'
+  api_base_url: 'http://localhost:3000'
