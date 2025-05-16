@@ -4,6 +4,7 @@
 - Zoli Szucs
 
 ## Installation
+Note:  tested using the Mac's built-in Terminal
 
 1. Clone the repository
    `git clone  https://github.com/zs-dev/rewards-redemption-rails-app.git`
