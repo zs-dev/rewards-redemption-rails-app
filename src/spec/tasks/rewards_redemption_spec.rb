@@ -41,7 +41,6 @@ RSpec.describe 'utils:rewards_redemption' do
         $stdout = original_stdout
       end
 
-      # Verify the expected output
       expect(output.string).to include("Logged in as: #{user.name} (#{user.email})")
       expect(output.string).to include("Current balance: 1000 points")
       expect(output.string).to include("Goodbye!")
@@ -147,7 +146,7 @@ RSpec.describe 'utils:rewards_redemption' do
     end
   end
   context 'when user does not exist' do
-    it 'shows error and exits gracefully' do
+    it 'shows error and exits' do
       allow(Rails.application).to receive(:config_for).with(:rewards).and_return(
         { 'default_user' => 'nonexistent@example.com' }
       )

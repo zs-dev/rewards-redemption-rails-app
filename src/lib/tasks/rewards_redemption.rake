@@ -112,9 +112,9 @@ end
 # @param user [User]
 def check_balance(user)
   if (balance_data = api_get("/users/#{user.id}/balance"))
-    puts "\nCurrent balance: #{balance_data['balance']} points"
+    puts "\nCurrent balance: #{balance_data['balance']} points\n"
   else
-    puts "\nFailed to get balance. Status: #{response.status}. Body: #{response.body}"
+    puts "\nFailed to get balance. Status: #{response.status}. Body: #{response.body}\n"
   end
 end
 
@@ -192,7 +192,7 @@ def redeem_reward(user)
 
   reward = api_get("/rewards/#{reward_id}")
   if reward['error']
-    puts "No reward found with ID: #{reward_id}. Select option 2 to see reward IDs."
+    puts "\nNo reward found with ID: #{reward_id}. Select option 2 to see reward IDs.\n"
     return
   end
 
@@ -205,7 +205,7 @@ def redeem_reward(user)
   end
 
   unless confirm
-    puts 'Redemption cancelled'
+    puts "\nRedemption cancelled\n"
     return
   end
 
@@ -217,9 +217,9 @@ def redeem_reward(user)
   if response&.success?
     puts "\nReward redeemed successfully!"
     if (balance = api_get("/users/#{user.id}/balance"))
-      puts "Remaining balance: #{balance['balance'].to_i} points"
+      puts "Remaining balance: #{balance['balance'].to_i} point\n"
     end
   else
-    puts "Redemption failed: #{response.body['error']}"
+    puts "\nRedemption failed: #{response.body['error']}\n"
   end
 end

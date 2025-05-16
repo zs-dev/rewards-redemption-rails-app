@@ -25,7 +25,7 @@ RSpec.configure do |config|
 
   config.after(:each) do
     DatabaseCleaner.clean
-    $stdout = STDOUT  # Reset stdout after CLI tests
+    $stdout = STDOUT  # reset stdout after CLI tests
   end
 
   Shoulda::Matchers.configure do |shoulda_config|

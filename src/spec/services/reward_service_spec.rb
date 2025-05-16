@@ -13,7 +13,7 @@ RSpec.describe RewardService do
     end
 
     context 'handles non-integer input' do
-      it 'raises ArgumentError for non-numeric string' do
+      it 'raises ArgumentError for non-numeric data' do
         expect {
           RewardService.get_reward_by_id('fail')
         }.to raise_error(ArgumentError, 'Reward id must be an integer.')
