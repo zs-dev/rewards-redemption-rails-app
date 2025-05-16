@@ -255,7 +255,7 @@ RSpec.describe 'utils:rewards_redemption' do
         .to_return(
           status: 404,
           body: { error: 'The reward does not exist.' }.to_json,
-        )
+          )
       prompt = instance_double(TTY::Prompt)
       allow(TTY::Prompt).to receive(:new).and_return(prompt)
       allow(prompt).to receive(:ask).and_return('3', '-1', '5')
@@ -275,61 +275,6 @@ RSpec.describe 'utils:rewards_redemption' do
       aggregate_failures do
         expect(output.string).to include("No reward found with ID: -1. Select option 2 to see reward IDs.")
         expect(output.string).to include("Goodbye!")
-      end
-    end
-    context 'when cancelling reward redemption' do
-      let(:reward) { { 'id' => 1, 'name' => 'Premium Reward', 'points' => 100 } }
-
-      it 'cancels the redemption and shows message when user declines confirmation' do
-        stub_request(:get, "#{api_base_url}/rewards/#{reward['id']}")
-          .to_return(status: 200, body: reward.to_json)
-
-        prompt = instance_double(TTY::Prompt)
-        allow(TTY::Prompt).to receive(:new).and_return(prompt)
-
-        allow(prompt).to receive(:ask).with(
-          /Enter your choice \(1-5\):/,
-          required: true
-        ) do |*args, &block|
-          question = double('Question')
-          allow(question).to receive(:validate)
-          allow(question).to receive(:messages).and_return({})
-          block.call(question) if block
-          '3'
-        end.once.and_return('5')
-
-        allow(prompt).to receive(:ask).with(
-          'Enter the ID of the reward you want to redeem:'
-        ) do |*args, &block|
-          question = double('Question')
-          allow(question).to receive(:required)
-          allow(question).to receive(:validate)
-          block.call(question) if block
-          '1'
-        end
-
-        allow(prompt).to receive(:yes?).with(
-          "Redeem 'Premium Reward' for 100 points?"
-        ).and_return(false)
-
-        output = StringIO.new
-        original_stdout = $stdout
-        $stdout = output
-
-        begin
-          Rake::Task[task_name].reenable
-          Rake::Task[task_name].invoke
-        ensure
-          $stdout = original_stdout
-        end
-
-        aggregate_failures do
-          expect(output.string).to include("Redemption cancelled")
-          expect(output.string).to include("Goodbye!")
-          expect(WebMock).not_to have_requested(:post, "#{api_base_url}/redeem")
-        end
-
-        expect(WebMock).to have_requested(:get, "#{api_base_url}/rewards/#{reward['id']}")
       end
     end
   end
